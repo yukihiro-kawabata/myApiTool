@@ -25,3 +25,12 @@ Route::get('/doc', 'apiController@docAction');
 
 // basic API URL
 Route::get('/api', 'apiController@apiAction');
+
+
+// regist of cash
+Route::get('/cash/index', 'cashController@indexAction');
+// regist execute
+Route::get('/cash/indexexecute', 'cashController@indexexecute');
+Route::post('/cash/indexexecute', 'cashController@indexexecute');
+// cash list
+Route::get('/cash/list', 'cashController@listAction');

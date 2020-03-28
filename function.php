@@ -15,6 +15,21 @@ function d($param = '')
     echo ('</pre>');
 }
 
+// 今月から18ヶ月前までの年月を返す
+function all_year_month() : array
+{
+    $re = [];
+    $cnt = 0;
+    for ($i = date('Ym'); $i > 0; $i--) {        
+        if ($cnt === 18) break; // 18ヶ月前
+        if (preg_replace('/^\d{4}/', '', $i) === '00') {
+            $i = (int)preg_replace('/\d{2}$/', '', $i) - 1 . '12';
+        }
+        $re[$i] = '';
+        $cnt++;
+    }
+    return $re;
+}
 
 /*
  * check if the value of the target key is in the array.
