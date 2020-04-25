@@ -36,20 +36,25 @@
 
     </head>
     <body>
-        <nav id="header_nav" class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">API Tool</a>
-                </div>
-                
-                <div class="collapse navbar-collapse" id="navbarEexample1">
+
+        <div class="pos-f-t">
+            <div class="collapse" id="navbarToggleExternalContent">
+                <div class="bg-dark p-4">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/regist/index') }}">regist</a></li>
-                        <li><a href="{{ url('/doc') }}">document</a></li>
+                        <li><a href="{{ url('/cash/index') }}" style="color:#fff;">登録ページ</a></li>
+                        <li><a href="{{ url('/cash/list') }}" style="color:#fff;">一覧ページ</a></li>
+                        <li><a href="{{ url('/cash/index') . '?constant=true' }}" style="color:#fff;">自動登録設定</a></li>
+                        <li><a href="{{ url('/cash/constant/list') }}" style="color:#fff;">自動登録一覧</a></li>
                     </ul>
                 </div>
             </div>
-        </nav>
+            <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+        </div>
+
         @yield('body')
     </body>
 </html>

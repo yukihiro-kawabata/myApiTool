@@ -8,7 +8,10 @@ use App\db\cash;
 
 class cashModel extends Model
 {
-    private $devit_limit_day = 15;
+    private $devit_day_from = 16;
+    private $devit_day_to = 15;
+
+    public $userDatas = ['devit', 'kabigon', 'yukihiro', 'share'];
 
     /*
      * 一覧で使用する集計科目ごとのサマリーデータ
@@ -22,16 +25,21 @@ class cashModel extends Model
         $month = preg_replace('/^\d{4}/', '', $date);
 
         $cashDao = new cash();
-        $cashDatas = $cashDao->fetch_kamoku_sum_price("$year-$month");
-        $viewDatas = [];
-        foreach ($cashDatas as $cashDataNum => $cashData) {
-            $view = [];
-            $view['kamoku_sum'] = $cashData->kamoku_sum;
-            $view['amount']     = number_format((int)$cashData->amount);
-            $view['amount_flg'] = $cashData->amount_flg;
-            $viewDatas[] = $view;
+        $data = [];
+        // null でユーザ制限をなくして取得ができる
+        foreach (array_merge($this->userDatas, [null]) as $user_name) {
+            $cashDatas = $cashDao->fetch_kamoku_sum_price("$year-$month", $user_name);
+            $key_name = $user_name;
+            if (is_null($key_name)) $key_name = "ALL"; // view側の仕様
+            foreach ($cashDatas as $cashDataNum => $cashData) {
+                $tmp = [];
+                $tmp['kamoku_sum'] = $cashData->kamoku_sum;
+                $tmp['amount']     = number_format((int)$cashData->amount);
+                $tmp['amount_flg'] = $cashData->amount_flg;
+                $data[$key_name][] = $tmp;
+            }
         }
-        return $viewDatas;
+        return $data;
     }
 
     /*
@@ -63,11 +71,11 @@ class cashModel extends Model
         
         // 指定年月が今月　且つ　今月が15日を過ぎていなければ
         if ($month === (int)date('n') && (int)date('d') < 15) {
-            $from = "$year-" . sprintf('%02d', $month - 1) . "-" . $this->devit_limit_day;
-            $to   = "$year-". sprintf('%02d', $month) . "-" . $this->devit_limit_day;
+            $from = "$year-" . sprintf('%02d', $month - 1) . "-" . $this->devit_day_from;
+            $to   = "$year-". sprintf('%02d', $month) . "-" . $this->devit_day_to;
         } else {
-            $from = "$year-" . sprintf('%02d', $month) . "-" . $this->devit_limit_day;
-            $to   = "$year-" . sprintf('%02d', $month + 1) . "-" . $this->devit_limit_day;
+            $from = "$year-" . sprintf('%02d', $month) . "-" . $this->devit_day_from;
+            $to   = "$year-" . sprintf('%02d', $month + 1) . "-" . $this->devit_day_to;
         }
         
         $cashDao = new cash();
